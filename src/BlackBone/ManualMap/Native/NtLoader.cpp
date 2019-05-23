@@ -6,7 +6,7 @@
 #include "../../Misc/trace.hpp"
 #include "../../Symbols/SymbolData.h"
 
-#include "../contrib/VersionHelpers.h"
+#include <3rd_party/VersionApi.h>
 
 namespace blackbone
 {
@@ -365,7 +365,7 @@ NTSTATUS NtLdr::UnloadTLS( const NtLdrEntry& mod, bool noThread /*= false*/ )
     uint64_t result = 0;
 
     a->GenPrologue();
-    a->GenCall( LdrpReleaseTlsEntry, { mod.ldrPtr, 0 }, cc_fastcall );
+    a->GenCall( LdrpReleaseTlsEntry, { mod.ldrPtr, 0 }, IsWindows8Point1OrGreater() ? cc_fastcall : cc_stdcall );
 
     _process.remote().AddReturnWithEvent( *a );
     a->GenEpilogue();
